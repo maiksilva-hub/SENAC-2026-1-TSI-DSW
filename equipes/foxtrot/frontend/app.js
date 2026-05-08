@@ -96,3 +96,21 @@ async function loadTasks() {
         logout();
     }
 }
+
+// --- COMMIT 6: Funcionalidade de Criação de Tarefas (Create) ---
+async function addTask() {
+    const title = document.getElementById("newTask").value;
+    if (!title) return;
+
+    await fetch(`${API_URL}/tasks`, {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        },
+        body: JSON.stringify({ title: title })
+    });
+
+    document.getElementById("newTask").value = "";
+    loadTasks();
+}
