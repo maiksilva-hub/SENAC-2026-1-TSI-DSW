@@ -114,3 +114,31 @@ async function addTask() {
     document.getElementById("newTask").value = "";
     loadTasks();
 }
+
+// --- COMMIT 7: Funcionalidade de Edição e Status (Update) ---
+async function toggleTask(id, title, completed) {
+    await fetch(`${API_URL}/tasks`, {
+        method: "PUT",
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        },
+        body: JSON.stringify({ id, title, completed })
+    });
+    loadTasks();
+}
+
+async function editTask(id, currentTitle, completed) {
+    const newTitle = prompt("Novo título:", currentTitle);
+    if (newTitle === null || newTitle === currentTitle) return;
+
+    await fetch(`${API_URL}/tasks`, {
+        method: "PUT",
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        },
+        body: JSON.stringify({ id, title: newTitle, completed })
+    });
+    loadTasks();
+}
