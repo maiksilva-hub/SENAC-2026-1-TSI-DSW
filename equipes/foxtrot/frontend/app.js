@@ -52,3 +52,47 @@ function showTodoSection() {
     document.getElementById("auth-section").style.display = "none";
     document.getElementById("todo-section").style.display = "block";
 }
+
+// --- COMMIT 5: Funcionalidade de Listagem de Tarefas (Read) ---
+async function loadTasks() {
+    const res = await fetch(`${API_URL}/tasks`, {
+        headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+    });
+    
+    if (res.ok) {
+        const tasks = await res.json();
+        const list = document.getElementById("taskList");
+        list.innerHTML = ""; 
+
+        if(tasks){
+            tasks.forEach(task => {
+                const li = document.createElement("li");
+                if (task.completed) li.classList.add("completed");
+
+                const span = document.createElement("span");
+                span.textContent = task.title;
+
+                const check = document.createElement("input");
+                check.type = "checkbox";
+                check.checked = task.completed;
+                check.onclick = () => toggleTask(task.id, task.title, !task.completed);
+
+                const editBtn = document.createElement("button");
+                editBtn.textContent = "Editar";
+                editBtn.onclick = () => editTask(task.id, task.title, task.completed);
+
+                const delBtn = document.createElement("button");
+                delBtn.textContent = "Excluir";
+                delBtn.onclick = () => deleteTask(task.id);
+
+                li.appendChild(check);
+                li.appendChild(span);
+                li.appendChild(editBtn);
+                li.appendChild(delBtn);
+                list.appendChild(li);
+            });
+        }
+    } else {
+        logout();
+    }
+}
