@@ -142,3 +142,16 @@ async function editTask(id, currentTitle, completed) {
     });
     loadTasks();
 }
+
+// --- COMMIT 8: Funcionalidade de Exclusão (Delete) ---
+async function deleteTask(id) {
+    if (!confirm("Tem certeza que deseja excluir?")) return;
+
+    await fetch(`${API_URL}/tasks?id=${id}`, {
+        method: "DELETE",
+        headers: { 
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
+    loadTasks();
+}
